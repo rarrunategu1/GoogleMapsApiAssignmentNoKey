@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+#map {
+    height: 100%; <!--this css says I want the map to be at 100% of the page-->
+    }
+</head>
+<body>
+<!--add a google map simply by adding 3 things-->
+
+<!--*Next you need a DIV Element with an id of map--> 
+<div id="map"></div>
+
+<!--Lastly we need more javascript-->
+<script>
+    var map; //map variable
+    function initMap() { //this is an initialize js function to load the map
+        //Constructor creates a new map - only center and zoom are required.
+        //(document.getElementById('map') is saying where in the html to load the map
+        //which will be the map div we created 
+        //and what part of the world to show
+        //center: {lat: 40.741359, lng: -73.9980244},
+         //   zoom: 13
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 40.741359, lng: -73.9980244},
+            zoom: 13 //you can go to level 21
+        });
+    }
+</script>
+
+<!--*First you need a script line into your html code to load the api which loads the js definitions
+when the page starts loading in the browser.  We're loading it asynchronously (async)
+which means the rest of the page will render while the js api loads (which gives you 
+more speed as it lets your page load without having to wait for javascript.  Then 
+the callback function will execute when the api is done loading. if you're not
+immediately using the API's functionality you could put the same instruction inside 
+a function and call it only when you plan to use it.
+maps.googleapis.com/maps is the endpoint that we're loading the js from
+Parameter v=3 means we're calling version 3 of the API-->
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=MYAPIKEY&v=callback=initMap">
+    </script>
+</script>
+</body>
+</html>
