@@ -5,12 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+   
+<style>    
 #map {
-    height: 100%; <!--this css says I want the map to be at 100% of the page-->
-    }
+    bottom: 0px;
+    height: 100%; 
+    left: 362px;
+    position: absolute;
+    right: 0px;
+}
+.options-box {
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 3px;
+    height: 100;
+    line-height: 35px;
+    padding: 10px 10px 30px 10px;
+    text-align: left;
+    width: 340px;
+}
+</style>
+
 </head>
 <body>
-<!--add a google map simply by adding 3 things-->
+<div class="container">
+    <div class="options-box">
+        <h1>Find Your New NYC Home</h1>
+        <div>
+            <input id="show-listings" type="button" value="Show Listings">
+            <input id="hide-listings" type="button" value="Hide Listings">
+        </div>
+    </div>
+</div>
 
 <!--*Next you need a DIV Element with an id of map--> 
 <div id="map"></div>
@@ -81,7 +107,6 @@ for (var i=0; i<locations.length; i++) {
     var title = locations[i].title;
     //create a marker per locations, and put into markers array.
     var marker = new google.maps.Marker({
-        map: map,
         position: position,
         title: title,
         animation: google.maps.Animations.DROP,
@@ -97,8 +122,12 @@ for (var i=0; i<locations.length; i++) {
         populateInfoWindow(this, largeInfowindow); //this seperate function passes in the marker that was clicked which is 'this' and the infowindow created on initialize above
     });
 }
-//and then will have the fit itself to those bounds
-map.fitBounds(bounds); //see line 93 and 73
+
+
+//eventListeners for show and hide buttons
+document.getElementById('show-listings').addEventListener('click', showListings);
+document.getElementById('hide-listings').addEventListener('click', hideListings);
+
 
 //This function populates the infowindow when the marker is clicked.  We'll only allow
 //one infowindow which will open at the marker that is clicked, and populate based
@@ -113,16 +142,23 @@ if (infowindow.marker) != marker)  {
 infowindow.addListener('closeclick', function() {
     infowindow.setMarker(null);
 });
-    
-    
-    
-    
-}   
-    
-    
-    
+  }   
+  }
+//This function will loop through the markers array and display the all.
+function showListings() {
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i<markers, length; i++) {
+        markers[i].setMap(map); //this function will set the map to map
+        bounds.extend(markers[i].position); //and extend the bounds of the map to fit each one of the markers
+    }
+    map.fitBounds(bounds);
 }
-    
+
+//this function will loop through the markers array and hide them all
+function hideListing() {
+    for (var i = 0; i<marker.length; i++) {
+        markers[i].setMap(null); 
+}
     
     
 </script>
@@ -137,7 +173,7 @@ a function and call it only when you plan to use it.
 maps.googleapis.com/maps is the endpoint that we're loading the js from
 Parameter v=3 means we're calling version 3 of the API-->
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=MYAPIKEY&v=callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=MYAPIKEY&callback=initMap">
     </script>
 </script>
 </body>
