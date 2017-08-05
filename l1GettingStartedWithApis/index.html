@@ -18,6 +18,9 @@
 <!--Lastly we need more javascript-->
 <script>
     var map; //map variable
+    
+    var markers = []; //this is the blank array for all the listing markers
+    
     function initMap() { //this is an initialize js function to load the map
         //Constructor creates a new map - only center and zoom are required.
         //(document.getElementById('map') is saying where in the html to load the map
@@ -28,8 +31,100 @@
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 40.741359, lng: -73.9980244},
             zoom: 13 //you can go to level 21
-        });
-    }
+        }); 
+    //the following points out a location on the map 
+    //  var tribeca = {lat: 40.719526, lng: -74.0089934}; //this points out a location on the map
+    // }//the following "marker" will make it appear on the map
+    // var marker = new google.maps.Marker({ //google.map.Marker is an object
+    //     position: tribeca,
+    //     map: map,
+    //     title: 'First Marker!' //this title appears if we hover over the marker
+    // });
+    // //next we are going to add info to the marker so that th user an see information about
+    // //that marker when they hover over it.
+    // var infowindow = new google.maps.InfoWindow({ //var infowindow only required when we are putting content in the info window
+    //     content: 'Do you ever feel like an InfoWindow, floating through the wind,' + 'ready to start again?'
+    // }); //the info window won't open automatically though.  We're adding and event listener below for that
+    // marker.addListener('click', function() {
+    //     infowindow.open(map, marker); //calling the infowwindow.open method, passing in the map on which to open,
+    //     //and optionally, the marker on which to anchor it.  
+    //     //if we didn't pass in a marker, we would need to give the window a position property so that it has a place to open
+    // });
+    
+    //the following will show how to list many markers on a map
+    //These are real estate listings that will be shown to the user.
+    //Normally we'd have these in a database instead.
+    
+    var locations = [
+        {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
+        {title: 'Chelsea Loft', location: {lat: 40.74448883, lng: -73.99949465}},
+        {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062, lng: -73.9895759}},
+        {title: 'East Village Hip Studio', location: {lat: 40.7281777, lng: -73.984377}},
+        {title: 'Tribeca Arty Bachelor Pad', location: {lat: 40.7195264, lng: -74.0089934}},
+        {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}},
+ ];
+ //make sure to add a blank marker globally for all the listing markers before the initialize function
+ //it's recommended to use a database in our own projects and serve the info to our site.
+//there are a bunch of features of the API that will allow you to easily render a lot of information onto your website.    
+    
+    
+
+var largeInfowindow = new google.maps.InfoWindow();
+var bounds = new google.maps.LatLngBounds(); //this is the last step.  We may add listings which are outside the initial zoom area. This allows us to adj the boundaries of the map to fit everything that we want the user to see 
+
+//next we'll loop through the locations we created in order to create one marker per location
+
+//the following group uses the location array to create an array of markers on initialize.
+for (var i=0; i<locations.length; i++) {
+    //Get the position from the location array.
+    var position = locations [i]. location;
+    var title = locations[i].title;
+    //create a marker per locations, and put into markers array.
+    var marker = new google.maps.Marker({
+        map: map,
+        position: position,
+        title: title,
+        animation: google.maps.Animations.DROP,
+        id: i
+    });
+    //push the marker to our array of markers
+    markers.push(marker); //we'll keep each newly created marker instance in the markers array to keep them organized.
+    //Extend the boundaries of the map for each marker
+    bounds.extend(marker.position);
+    //create an onclick event to open an infowindow at each marker
+    //the content will also reflect that marker
+    marker.addListener('click', function() {
+        populateInfoWindow(this, largeInfowindow); //this seperate function passes in the marker that was clicked which is 'this' and the infowindow created on initialize above
+    });
+}
+//and then will have the fit itself to those bounds
+map.fitBounds(bounds); //see line 93 and 73
+
+//This function populates the infowindow when the marker is clicked.  We'll only allow
+//one infowindow which will open at the marker that is clicked, and populate based
+//on that markers position.
+function populateInfoWindow(marker, infowindow) {  //this function will be called whenever a marker is clicked
+    //check to make sure the infowindow is not already opened on this marker
+if (infowindow.marker) != marker)  {
+    infowindow.marker = marker;
+    infowindow.setContent('<div>' + marker.title + '</div>'); //this sets the contenton that info window
+    infowindow.open(map, marker); //this opens the window on that marker
+    //Make sure the marker property is cleared if the infowindow is closed
+infowindow.addListener('closeclick', function() {
+    infowindow.setMarker(null);
+});
+    
+    
+    
+    
+}   
+    
+    
+    
+}
+    
+    
+    
 </script>
 
 <!--*First you need a script line into your html code to load the api which loads the js definitions
